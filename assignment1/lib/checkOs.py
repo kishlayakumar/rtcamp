@@ -6,4 +6,3 @@ def checkOs():
  osDetails = osDetails.split("-")
  os = osDetails[-3]
  return os
-checkOs()

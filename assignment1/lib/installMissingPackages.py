@@ -36,6 +36,18 @@ def installmissingPackages(OS):
       installMysql.installMySqlOnREHL()
     if testVarN == False:
       installNingx.installNginxOnREHL()
-    if testvarP == False:
+    if testVarP == False:
       installPhp.installPHPOnREHL()
-installmissingPackages('Centos')    
+  elif OS == "debian" or OS == "Ubuntu":
+    if testVarM == False:
+      print ("Mysql not found")
+      print ("Installing Mysql")
+      installMysql.installMysqlOndebian()
+    if testVarN == False:
+      print("Nginx not found")
+      print ("Installing Nginx")
+      installNingx.installNginxOndebian()
+    if testVarP == False:
+      print("Php not found")
+      print("Installing php")
+      installPhp.installPHPOndebian()
