@@ -1,4 +1,32 @@
 
+DB="test.db"
+
+function table_exists(){
+Q="SELECT name FROM sqlite_master WHERE type=’table’ AND name='$1';"
+R=`sqlite3 $DB "$Q"`
+if [ "$R" = "$1" ]; then
+echo 1
+else
+echo 0
+fi
+}
+
+
+function addFunction {
+STATE=$( table_exists "postData" )
+if [ "$STATE" -gt 0 ]; then
+sqlite3 $DB “CREATE TABLE postData (id INTEGER PRIMARY KEY, title TEXT, content TEXT);”
+else
+echo “TABLE ALREADY EXISTS”
+fi
+title=$1
+content=$2
+data=`sqlite3 test.db "select id from n";`
+
+
+
+
+}
 
 
 help () {
