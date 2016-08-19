@@ -2,7 +2,7 @@
 DB="test.db"
 
 function table_exists(){
-Q="SELECT name FROM sqlite_master WHERE type=’table’ AND name='$1';"
+Q="SELECT name FROM sqlite_master WHERE type='table' AND name='$1';"
 R=`sqlite3 $DB "$Q"`
 if [ "$R" = "$1" ]; then
 echo 1
@@ -14,18 +14,22 @@ fi
 
 function addFunction {
 STATE=$( table_exists "postData" )
-if [ "$STATE" -gt 0 ]; then
-sqlite3 $DB “CREATE TABLE postData (id INTEGER PRIMARY KEY, title TEXT, content TEXT);”
+if [ "$STATE" -eq 0 ]; then
+sqlite3 $DB "CREATE TABLE postData (id INTEGER PRIMARY KEY, title TEXT, content TEXT);"
 else
-echo “TABLE ALREADY EXISTS”
+echo "TABLE ALREADY EXISTS"
 fi
 title=$1
 content=$2
-data=`sqlite3 test.db "select id from n";`
-
-
-
-
+data=`sqlite3 test.db "SELECT id FROM postData ORDER BY id DESC LIMIT 1;";`
+echo $data
+if [ "$data" == "" ]; then
+  query="INSERT INTO postData VALUES (1,'$title','$content');"
+else
+  id=$(( $data+1 ))
+  query="INSERT INTO postData VALUES ($id,'$title','$content');"
+fi
+sqlite3 $DB "$query"
 }
 
 
@@ -44,12 +48,13 @@ EOF
 
 
 argument1=$1
-if [[ "$argument1"=="--help" ]]; then
+if [ "$argument1" == "--help" ]; then
+  echo "hello"
   help
-fi
-if [[ "$argument1"=="post"]]; then
-  if [ "$2"=="add" ];
+elif [ "$argument1" == "post" ]
+  then
+  if [ "$2"=="add" ]; then
+    
     addFunction $3 $4
   fi
-  
 fi
