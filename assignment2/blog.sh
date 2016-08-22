@@ -22,7 +22,6 @@ fi
 title=$1
 content=$2
 data=`sqlite3 test.db "SELECT id FROM postData ORDER BY id DESC LIMIT 1;";`
-echo $data
 if [ "$data" == "" ]; then
   query="INSERT INTO postData VALUES (1,'$title','$content');"
 else
@@ -32,6 +31,28 @@ fi
 sqlite3 $DB "$query"
 }
 
+function showPost {
+STATE=$( table_exists "postData" )
+if [ "$STATE" -eq 1 ]; then
+  sqlite3 $DB "select * from postData"
+else
+echo "TABLE NOT EXISTS"
+fi
+}
+
+function searchPost {
+searchKeyword=$1
+Data=`sqlite3 $DB "select * from postData"`
+for i in $Data
+do
+  if [[ "$i" = *"$1"* ]]
+  then
+    echo "$i"
+  fi
+  
+done
+
+}
 
 help () {
     cat <<EOF
@@ -49,12 +70,17 @@ EOF
 
 argument1=$1
 if [ "$argument1" == "--help" ]; then
-  echo "hello"
   help
 elif [ "$argument1" == "post" ]
   then
-  if [ "$2"=="add" ]; then
-    
+  if [[ "x$2" = "xadd" ]]; then
     addFunction $3 $4
+
+  elif [[ "x$2" = "xlist" ]];
+  then
+    showPost
+  elif [[ "x$2" = "xsearch" ]];
+  then
+    searchPost $3
   fi
 fi
